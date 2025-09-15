@@ -1,0 +1,101 @@
+{%liquid
+
+  assign product_title1 = section.settings.product_title1
+  assign product_price1 = section.settings.product_price1
+
+  assign first_product_checkbox = section.settings.first_product_checkbox
+
+  assign product_title2 = section.settings.product_title2
+  assign product_price2 = section.settings.product_price2
+   
+  assign second_product_checkbox = section.settings.second_product_checkbox
+
+  assign total_product_title = section.settings.total_product_title
+  assign total_product_price = section.settings.total_product_price
+  
+
+  assign total = product_price1
+  if section.settings.first_product_checkbox
+  assign total = total | plus:product_price2
+  endif
+
+  if section.settings.second_product_checkbox
+  assign total = total | plus:product_price3
+  endif
+
+%}
+
+{% if first_product_checkbox == true %}
+<h1>{{product_title1}}</h1>
+<p>{{ product_price1 }}</p>
+{% endif %}
+
+{% if second_product_checkbox == true %}
+<h1>{{product_title2}}</h1>
+<p>{{ product_price2 }}</p>
+{% endif %}
+
+<h1>{{ total_product_title  }}</h1>
+<p>{{ total }}</p>
+
+
+
+
+{% schema %}
+{
+  "name": "New Product Fetured",
+  "settings": [
+    {
+    "type": "checkbox",
+    "id": "first_product_checkbox",
+    "label": "Show First Product"
+    },
+    {
+     "type":"text",
+     "id": "product_title1",
+     "label": " First Product Title"
+    },
+    {
+     "type": "text",
+     "id": "product_price1",
+     "label": "First Product Price"
+
+    },
+    {
+    "type": "checkbox",
+    "id": "second_product_checkbox",
+    "label": "Show Second Product"
+    },
+     {
+     "type": "text",
+     "id": "product_title2",
+     "label": " Second Product Title"
+    },
+    {
+     "type": "text",
+     "id": "product_price2",
+     "label": " Second Product Price"
+    },
+
+    {
+     "type": "text",
+     "id": "total_product_title",
+     "label": " Total Product Title "
+    },
+   {
+     "type": "text",
+     "id": "total_product_price",
+     "label": " Total Product Price"
+    },
+
+   
+  ],
+
+   "presets": [
+    { 
+        "name": "New Product Featured" 
+    }
+  ]
+}
+{% endschema %}
+
