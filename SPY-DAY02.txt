@@ -1,0 +1,55 @@
+
+{% liquid
+
+    assign bannerimg = section.settings.bannerimg
+    assign bannercolor = section.settings.bannercolor
+
+%}
+
+<section>
+ <div><img src="{{ bannerimg | img_url:'1000x' }}" width="100%" height="auto" alt="bannerimg.alt"></div>
+</section>
+
+{%schema%}
+{
+"name": "Background Section",
+"settings":[
+    {
+        "type":"select",
+        "id":"sectionbackground",
+        "label": "Section Background Style",
+        "default": "color",
+        "options":[
+            {
+                "label":"Background Color",
+                "value":"color"
+            },
+            {
+                "label":"Background Image",
+                "value":"image"
+            }
+        ]
+    },
+
+    {
+     "type": "image_picker",
+     "id": "bannerimg",
+     "label": "Banner Image",
+     "visible_if": "{{  section.settings.sectionbackground == 'image' }}"
+    },
+    {
+     "type": "color",
+     "id": "bannercolor",
+     "label": "Background Color",
+     "visible_if": "{{  section.settings.sectionbackground == 'color' }}"
+    }
+],
+
+
+"presets":[
+    {
+     "name":"New Section3"
+    }
+]
+}
+{%endschema%}
