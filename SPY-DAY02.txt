@@ -8,6 +8,7 @@
     assign sectionbackground = section.settings.sectionbackground
     assign sectionpadding = section.settings.sectionpadding
 
+
 %}
 
 {%style%}
@@ -20,14 +21,18 @@
     background-size:{{sectionbgsize}};
     {%endif%}
 
-    Padding: {{ sectionpadding }}px;
+    padding: {{ sectionpadding }}px;
  }
 {%endstyle%}
 
 
 <section class= "{{section.id}}">
- <div>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+
+ <div class="flex">
+  {% for block in section.blocks %}
+    {%assign text = block.settings.ptext%}
+    <p> {{ text }} </p>
+  {% endfor %}
  </div>
 </section>
 
@@ -36,6 +41,20 @@
 {% schema %}
 {
   "name": "Background Section",
+  "blocks": [
+    {
+     "type": "block",
+     "name": "Blocks",
+     "settings": [
+      {
+       "type": "text",
+       "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+       "id": "ptext",
+       "label":"Add your text"
+      }
+     ]
+    }
+  ],
   "settings": [
     {
       "type": "select",
