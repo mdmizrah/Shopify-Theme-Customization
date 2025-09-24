@@ -4,52 +4,101 @@
     assign bannerimg = section.settings.bannerimg
     assign bannercolor = section.settings.bannercolor
 
+    assign sectionbgsize = section.settings.sectionbgsize
+    assign sectionbackground = section.settings.sectionbackground
+    assign sectionpadding = section.settings.sectionpadding
+
 %}
 
-<section>
- <div><img src="{{ bannerimg | img_url:'1000x' }}" width="100%" height="auto" alt="bannerimg.alt"></div>
+{%style%}
+ #shopify-section-{{section.id}}{
+    {% if sectionbackground == 'color'%}
+    background-color:{{bannercolor}};
+
+    {%elsif sectionbackground =='image'%}
+    background-image: url("{{bannerimg | img_url:'500x'}}");
+    background-size:{{sectionbgsize}};
+    {%endif%}
+
+    Padding: {{ sectionpadding }}px;
+ }
+{%endstyle%}
+
+
+<section class= "{{section.id}}">
+ <div>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+ </div>
 </section>
 
-{%schema%}
+
+
+{% schema %}
 {
-"name": "Background Section",
-"settings":[
+  "name": "Background Section",
+  "settings": [
     {
-        "type":"select",
-        "id":"sectionbackground",
-        "label": "Section Background Style",
-        "default": "color",
-        "options":[
-            {
-                "label":"Background Color",
-                "value":"color"
-            },
-            {
-                "label":"Background Image",
-                "value":"image"
-            }
-        ]
-    },
-
-    {
-     "type": "image_picker",
-     "id": "bannerimg",
-     "label": "Banner Image",
-     "visible_if": "{{  section.settings.sectionbackground == 'image' }}"
+      "type": "select",
+      "id": "sectionbackground",
+      "label": "Section Background Style",
+      "default": "color",
+      "options": [
+        { 
+        "label": "Background Color", 
+        "value": "color" 
+        },
+        { 
+        "label": "Background Image", 
+        "value": "image" 
+        }
+      ]
     },
     {
-     "type": "color",
-     "id": "bannercolor",
-     "label": "Background Color",
-     "visible_if": "{{  section.settings.sectionbackground == 'color' }}"
-    }
-],
-
-
-"presets":[
+      "type": "image_picker",
+      "id": "bannerimg",
+      "label": "Banner Image",
+      "visible_if": "{{ section.settings.sectionbackground == 'image' }}"
+    },
     {
-     "name":"New Section3"
+      "type": "select",
+      "id": "sectionbgsize",
+      "label": "Section Background Size",
+      "default": "auto",
+      "options": [
+        { "label": "Auto", 
+          "value": "auto" 
+        },
+        { "label": "Contain", 
+          "value": "contain" 
+        },
+        { 
+          "label": "Cover", 
+          "value": "cover" 
+          }
+      ],
+      "visible_if": "{{ section.settings.sectionbackground == 'image' }}"
+    },
+    { 
+    "type": "range", 
+    "id": "sectionpadding", 
+    "min": 0, 
+    "max": 500, 
+    "step": 10, 
+    "default": 50,
+    "unit" : "px", 
+    "label" : "Section Padding" 
+    },
+    {
+      "type": "color",
+      "id": "bannercolor",
+      "label": "Background Color",
+      "visible_if": "{{ section.settings.sectionbackground == 'color' }}"
     }
-]
+  ],
+  "presets": [
+    {
+      "name": "New Section3"
+    }
+  ]
 }
-{%endschema%}
+{% endschema %}
