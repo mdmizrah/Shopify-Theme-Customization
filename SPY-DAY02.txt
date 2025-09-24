@@ -28,12 +28,14 @@
 
 <section class= "{{section.id}}">
 
+{%if section.blocks.size > 0 %}
  <div class="flex">
   {% for block in section.blocks %}
     {%assign text = block.settings.ptext%}
     <p> {{ text }} </p>
   {% endfor %}
  </div>
+ {% endif %}
 </section>
 
 
