@@ -8,6 +8,8 @@
     assign sectionbackground = section.settings.sectionbackground
     assign sectionpadding = section.settings.sectionpadding
 
+    assign gap = section.settings.gap
+
 
 %}
 
@@ -23,6 +25,38 @@
 
     padding: {{ sectionpadding }}px;
  }
+
+.flex{
+   --space: {{gap}}px;
+   display: flex;
+   flex wrap: wrap;
+   gap: var(--space);
+ }
+.col_100{
+ flex-basis:calc(100% - var(--space));
+ max-width:calc(100% - var(--space));
+}
+
+.col_75{
+ flex-basis:calc(75% - var(--space));
+ max-width:calc(75% - var(--space));
+}
+
+.col_50{
+ flex-basis:calc(50% - var(--space));
+ max-width:calc(50% - var(--space));
+}
+
+.col_25{
+ flex-basis:calc(25% - var(--space));
+ max-width:calc(25% - var(--space));
+}
+
+.col_20{
+ flex-basis:calc(20% - var(--space));
+ max-width:calc(20% - var(--space));
+}
+
 {%endstyle%}
 
 
@@ -31,8 +65,10 @@
 {%if section.blocks.size > 0 %}
  <div class="flex">
   {% for block in section.blocks %}
+  <div class= "{{block.id}} {{block.settings.col}}">
     {%assign text = block.settings.ptext%}
     <p> {{ text }} </p>
+  </div>
   {% endfor %}
  </div>
  {% endif %}
@@ -53,6 +89,34 @@
        "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
        "id": "ptext",
        "label":"Add your text"
+      },
+      {
+        "type": "select",
+        "default": "col_50",
+        "id":"col",
+        "label": "Block Width",
+        "options": [
+          {
+            "label": "100%",
+            "value": "col_100"
+          },
+          {
+            "label": "75%",
+            "value": "col_75"
+          },
+          {
+            "label": "50%",
+            "value": "col_50"
+          },
+          {
+            "label": "25%",
+            "value": "col_25"
+          },
+            {
+            "label": "20%",
+            "value": "col_20"
+          }
+        ]
       }
      ]
     }
@@ -108,6 +172,16 @@
     "default": 50,
     "unit" : "px", 
     "label" : "Section Padding" 
+    },
+     { 
+    "type": "range", 
+    "id": "gap", 
+    "min": 0, 
+    "max": 50, 
+    "step": 1, 
+    "default": 0,
+    "unit" : "px", 
+    "label" : "Row Gap" 
     },
     {
       "type": "color",
