@@ -9,6 +9,7 @@
     assign sectionpadding = section.settings.sectionpadding
 
     assign gap = section.settings.gap
+    assign justify = section.settings.justify
 
 
 %}
@@ -31,6 +32,7 @@
    display: flex;
    flex wrap: wrap;
    gap: var(--space);
+   justify: {{justify}};
  }
 .col_100{
  flex-basis:calc(100% - var(--space));
@@ -173,7 +175,7 @@
     "unit" : "px", 
     "label" : "Section Padding" 
     },
-     { 
+    { 
     "type": "range", 
     "id": "gap", 
     "min": 0, 
@@ -182,6 +184,30 @@
     "default": 0,
     "unit" : "px", 
     "label" : "Row Gap" 
+    },
+
+    { 
+    "type": "select", 
+    "id": "justify", 
+    "label": "Flex Justify",
+    "options":[
+      {
+        "label":"center",
+        "value":"center"
+      },
+      {
+        "label":"flex-start",
+        "value":"flex-start"
+      },
+      {
+        "label":"flex-end",
+        "value":"flex-end"
+      },
+       {
+        "label":"space-between",
+        "value":"space-between"
+      }
+    ] 
     },
     {
       "type": "color",
