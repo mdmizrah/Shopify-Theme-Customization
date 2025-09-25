@@ -30,9 +30,9 @@
 .flex{
    --space: {{gap}}px;
    display: flex;
-   flex wrap: wrap;
+   flex-wrap: wrap;
    gap: var(--space);
-   justify: {{justify}};
+   justify-content: {{justify}};
  }
 .col_100{
  flex-basis:calc(100% - var(--space));
