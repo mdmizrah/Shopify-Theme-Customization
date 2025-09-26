@@ -68,8 +68,24 @@
  <div class="flex">
   {% for block in section.blocks %}
   <div class= "{{block.id}} {{block.settings.col}}">
-    {%assign text = block.settings.ptext%}
+    {%liquid 
+    
+     assign text = block.settings.text
+     assign richtext = block.settings.richtext
+
+     assign btntext = block.settings.btntext
+     assign btnurl = block.settings.btnurl
+     assign newtab = block.settings.newtab
+    
+    %}
+
     <p> {{ text }} </p>
+    <div class="content">{{richtext}}</div>
+
+    {%if btntext != blank%}
+    <a href = "{{btnurl}}" {%if newtab == true%} target =_blank {%endif%} >{{btntext}}</a>
+    {%endif%}
+
   </div>
   {% endfor %}
  </div>
@@ -83,14 +99,40 @@
   "name": "Background Section",
   "blocks": [
     {
-     "type": "block",
-     "name": "Blocks",
+     "type": "text_block",
+     "name": " Text Blocks",
      "settings": [
       {
-       "type": "text",
-       "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-       "id": "ptext",
-       "label":"Add your text"
+        "type":"text",
+        "id":"text",
+        "label": "Title",
+        "default": "Lorem ipsum dolor sit amet",
+        "info": "Write small title"
+      },
+      {
+       "type": "richtext",
+       "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+       "id": "richtext",
+       "label":"Richtext"
+      },
+      {
+       "type":"text",
+       "id":"btntext",
+       "label": "Button Text",
+       "default":"Buy Now"
+      },
+        {
+       "type":"url",
+       "id":"btnurl",
+       "label": "Button url",
+       "visible_if": "{{ block.settings.btntext != blank }}"
+      },
+        {
+       "type":"checkbox",
+       "id":"newtab",
+       "label": "Open New Tab",
+       "default":false,
+        "visible_if": "{{ block.settings.btntext != blank }}"
       },
       {
         "type": "select",
