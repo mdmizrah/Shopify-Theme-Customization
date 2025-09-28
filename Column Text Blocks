@@ -16,7 +16,7 @@
 %}
 
 {% style %}
-#shopify-section-{{ section.id }} {
+  #shopify-section-{{ section.id }} {
   {% if sectionbackground == 'color' %}
     background-color: {{ bannercolor }};
   {% elsif sectionbackground == 'image' %}
@@ -27,13 +27,13 @@
   padding: {{ padding_desktop }}px;
 }
 
-.flex {
+.flex{
    --space: {{ gap }}px;
+   gap: var(--space);
    display: flex;
    flex-wrap: wrap;
-   gap: var(--space);
    justify-content: {{ justify }};
-}
+ }
 .col_100 {
  flex-basis: calc(100% - var(--space));
  max-width: calc(100% - var(--space));
