@@ -59,6 +59,26 @@
  max-width:calc(20% - var(--space));
 }
 
+@media (max-width: 1024px) {
+  .col_75,
+  .col_50,
+  .col_25,
+  .col_20 {
+    flex-basis: calc(50% - var(--space));
+    max-width: calc(50% - var(--space));
+  }
+}
+
+@media (max-width: 768px) {
+  .col_75,
+  .col_50,
+  .col_25,
+  .col_20 {
+    flex-basis: calc(100% - var(--space));
+    max-width: calc(100% - var(--space));
+  }
+}
+
 {%endstyle%}
 
 <section class= "{{section.id}}">
@@ -358,4 +378,5 @@
   ]
 }
 {% endschema %}
+
 
