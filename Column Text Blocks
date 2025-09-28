@@ -1,3 +1,5 @@
+{{ 'new-landingpage-style.css' | asset_url | stylesheet_tag }}
+
 {% liquid
     assign bannerimg = section.settings.bannerimg
     assign bannercolor = section.settings.bannercolor
@@ -28,12 +30,13 @@
 }
 
 .flex{
-   --space: {{ gap }}px;
-   gap: var(--space);
-   display: flex;
-   flex-wrap: wrap;
-   justify-content: {{ justify }};
- }
+    --space: {{gap}}px;
+    justify-content: {{justify}};
+    gap: var(--space);
+    display: flex;
+    flex-wrap: wrap;
+   }
+
 .col_100 {
  flex-basis: calc(100% - var(--space));
  max-width: calc(100% - var(--space));
@@ -54,6 +57,33 @@
  flex-basis: calc(20% - var(--space));
  max-width: calc(20% - var(--space));
 }
+
+    gap: var(--space);
+    display: flex;
+    flex-wrap: wrap;
+   }
+
+.col_100 {
+ flex-basis: calc(100% - var(--space));
+ max-width: calc(100% - var(--space));
+}
+.col_75 {
+ flex-basis: calc(75% - var(--space));
+ max-width: calc(75% - var(--space));
+}
+.col_50 {
+ flex-basis: calc(50% - var(--space));
+ max-width: calc(50% - var(--space));
+}
+.col_25 {
+ flex-basis: calc(25% - var(--space));
+ max-width: calc(25% - var(--space));
+}
+.col_20 {
+ flex-basis: calc(20% - var(--space));
+ max-width: calc(20% - var(--space));
+}
+
 
 @media (max-width: 1024px) {
   #shopify-section-{{ section.id }} {
@@ -80,6 +110,7 @@
     max-width: calc(100% - var(--space));
   }
 }
+
 {% endstyle %}
 
 <section class="{{ section.id }}">
