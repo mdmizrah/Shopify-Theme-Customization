@@ -1,65 +1,64 @@
-
 {% liquid
-
     assign bannerimg = section.settings.bannerimg
     assign bannercolor = section.settings.bannercolor
 
     assign sectionbgsize = section.settings.sectionbgsize
     assign sectionbackground = section.settings.sectionbackground
-    assign sectionpadding = section.settings.sectionpadding
 
     assign gap = section.settings.gap
     assign justify = section.settings.justify
 
-
+    # Split padding values: "desktop|tablet|mobile"
+    assign padding_values = section.settings.sectionpadding | split: "|"
+    assign padding_desktop = padding_values[0] | default: 50
+    assign padding_tablet  = padding_values[1] | default: 30
+    assign padding_mobile  = padding_values[2] | default: 20
 %}
 
-{%style%}
- #shopify-section-{{section.id}}{
-    {% if sectionbackground == 'color'%}
-    background-color:{{bannercolor}};
+{% style %}
+#shopify-section-{{ section.id }} {
+  {% if sectionbackground == 'color' %}
+    background-color: {{ bannercolor }};
+  {% elsif sectionbackground == 'image' %}
+    background-image: url("{{ bannerimg | img_url: '500x' }}");
+    background-size: {{ sectionbgsize }};
+  {% endif %}
 
-    {%elsif sectionbackground =='image'%}
-    background-image: url("{{bannerimg | img_url:'500x'}}");
-    background-size:{{sectionbgsize}};
-    {%endif%}
+  padding: {{ padding_desktop }}px;
+}
 
-    padding: {{ sectionpadding }}px;
- }
-
-.flex{
-   --space: {{gap}}px;
+.flex {
+   --space: {{ gap }}px;
    display: flex;
    flex-wrap: wrap;
    gap: var(--space);
-   justify-content: {{justify}};
- }
-.col_100{
- flex-basis:calc(100% - var(--space));
- max-width:calc(100% - var(--space));
+   justify-content: {{ justify }};
 }
-
-.col_75{
- flex-basis:calc(75% - var(--space));
- max-width:calc(75% - var(--space));
+.col_100 {
+ flex-basis: calc(100% - var(--space));
+ max-width: calc(100% - var(--space));
 }
-
-.col_50{
- flex-basis:calc(50% - var(--space));
- max-width:calc(50% - var(--space));
+.col_75 {
+ flex-basis: calc(75% - var(--space));
+ max-width: calc(75% - var(--space));
 }
-
-.col_25{
- flex-basis:calc(25% - var(--space));
- max-width:calc(25% - var(--space));
+.col_50 {
+ flex-basis: calc(50% - var(--space));
+ max-width: calc(50% - var(--space));
 }
-
-.col_20{
- flex-basis:calc(20% - var(--space));
- max-width:calc(20% - var(--space));
+.col_25 {
+ flex-basis: calc(25% - var(--space));
+ max-width: calc(25% - var(--space));
+}
+.col_20 {
+ flex-basis: calc(20% - var(--space));
+ max-width: calc(20% - var(--space));
 }
 
 @media (max-width: 1024px) {
+  #shopify-section-{{ section.id }} {
+    padding: {{ padding_tablet }}px;
+  }
   .col_75,
   .col_50,
   .col_25,
@@ -70,6 +69,9 @@
 }
 
 @media (max-width: 768px) {
+  #shopify-section-{{ section.id }} {
+    padding: {{ padding_mobile }}px;
+  }
   .col_75,
   .col_50,
   .col_25,
@@ -78,61 +80,51 @@
     max-width: calc(100% - var(--space));
   }
 }
+{% endstyle %}
 
-{%endstyle%}
-
-<section class= "{{section.id}}">
-
-{%if section.blocks.size > 0 %}
+<section class="{{ section.id }}">
+{% if section.blocks.size > 0 %}
  <div class="flex">
   {% for block in section.blocks %}
-     {%liquid 
-    
-     assign text = block.settings.text
-     assign richtext = block.settings.richtext
+     {% liquid 
+       assign text = block.settings.text
+       assign richtext = block.settings.richtext
+       assign btntext = block.settings.btntext
+       assign btnurl = block.settings.btnurl
+       assign newtab = block.settings.newtab
+       assign column = block.settings.col
+       assign blockcolor = block.settings.blockcolor
+       assign paddingx = block.settings.paddingx
+       assign paddingy = block.settings.paddingy
+       assign radius = block.settings.radius
+       assign borderstyle = block.settings.borderstyle
+       assign bordercolor = block.settings.bordercolor
+       assign borderwidth = block.settings.borderwidth
+     %}
 
-     assign btntext = block.settings.btntext
-     assign btnurl = block.settings.btnurl
-     assign newtab = block.settings.newtab
-
-     assign column = block.settings.col
-     assign blockcolor = block.settings.blockcolor
-     assign paddingx = block.settings.paddingx
-     assign paddingy = block.settings.paddingy
-     assign radius = block.settings.radius
-     assign borderstyle = block.settings.borderstyle
-     assign bordercolor = block.settings.bordercolor
-     assign borderwidth = block.settings.borderwidth
-
-    
-    %}
-
-  <div class= "{{block.id}} {{column}} color-{{ blockcolor }} gradient"
+  <div class="{{ block.id }} {{ column }} color-{{ blockcolor }} gradient"
    style="padding: {{ paddingy }}px {{ paddingx }}px; border-radius: {{ radius }}px; 
-    border: {{borderwidth }}px {{borderstyle }} {{bordercolor }}" > 
+    border: {{ borderwidth }}px {{ borderstyle }} {{ bordercolor }}"> 
 
-    <h2> {{ text }} </h2>
-    <div class="content">{{richtext}}</div>
+    <h2>{{ text }}</h2>
+    <div class="content">{{ richtext }}</div>
 
-    {%if btntext != blank%}
-    <a class="button" href = "{{btnurl}}" {% if newtab == true %} target =_blank {%endif%} >{{btntext}}</a>
-    {%endif%}
-
+    {% if btntext != blank %}
+      <a class="button" href="{{ btnurl }}" {% if newtab == true %} target="_blank" {% endif %}>{{ btntext }}</a>
+    {% endif %}
   </div>
   {% endfor %}
  </div>
- {% endif %}
+{% endif %}
 </section>
-
-
 
 {% schema %}
 {
-  "name": "Background Section",
+  "name": "Column Section",
   "blocks": [
     {
      "type": "text_block",
-     "name": " Text Blocks",
+     "name": "Text Blocks",
      "settings": [
       {
         "type":"text",
@@ -143,7 +135,7 @@
       },
       {
        "type": "richtext",
-       "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+       "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
        "id": "richtext",
        "label":"Richtext"
       },
@@ -153,49 +145,34 @@
        "label": "Button Text",
        "default":"Buy Now"
       },
-        {
+      {
        "type":"url",
        "id":"btnurl",
        "label": "Button url",
        "visible_if": "{{ block.settings.btntext != blank }}"
       },
-        {
+      {
        "type":"checkbox",
        "id":"newtab",
        "label": "Open New Tab",
        "default":false,
-        "visible_if": "{{ block.settings.btntext != blank }}"
+       "visible_if": "{{ block.settings.btntext != blank }}"
       },
       {
         "type": "header",
         "content": "Block Style"
       },
-        {
+      {
         "type": "select",
         "default": "col_50",
         "id":"col",
         "label": "Block Width",
         "options": [
-          {
-            "label": "100%",
-            "value": "col_100"
-          },
-          {
-            "label": "75%",
-            "value": "col_75"
-          },
-          {
-            "label": "50%",
-            "value": "col_50"
-          },
-          {
-            "label": "25%",
-            "value": "col_25"
-          },
-            {
-            "label": "20%",
-            "value": "col_20"
-          }
+          { "label": "100%", "value": "col_100" },
+          { "label": "75%", "value": "col_75" },
+          { "label": "50%", "value": "col_50" },
+          { "label": "25%", "value": "col_25" },
+          { "label": "20%", "value": "col_20" }
         ]
       },
       {
@@ -203,7 +180,7 @@
         "id": "blockcolor",
         "label": "Block Color"
       },
-       {
+      {
         "type": "range",
         "id": "paddingx",
         "default": 15,
@@ -213,7 +190,7 @@
         "unit": "px",
         "label": "Horizontal Padding"
       },
-       {
+      {
         "type": "range",
         "id": "paddingy",
         "default": 15,
@@ -233,37 +210,24 @@
         "unit": "px",
         "label": "Border Radius"
       },
-
-        {
+      {
        "type": "select",
        "id": "borderstyle",
        "label": "Border Style",
        "default": "solid",
        "options": [
-        {
-         "label":"none",
-         "value": ""
-        },
-        {
-         "label": "solid",
-         "value": "solid"
-        },
-         {
-         "label": "dotted",
-         "value": "dotted"
-        },
-         {
-         "label": "dased",
-         "value": "dased"
-        }
+        { "label":"none", "value": "" },
+        { "label": "solid", "value": "solid" },
+        { "label": "dotted", "value": "dotted" },
+        { "label": "dashed", "value": "dashed" }
        ]
       },
       {
         "type": "range",
         "id": "borderwidth",
-        "default": 15,
+        "default": 1,
         "min": 0,
-        "max": 100,
+        "max": 20,
         "step": 1,
         "unit": "px",
         "label": "Border Width",
@@ -274,7 +238,7 @@
         "id": "bordercolor",
         "label": "Border Color",
         "visible_if": "{{block.settings.borderstyle != ''}}"
-      },
+      }
      ]
     }
   ],
@@ -285,14 +249,8 @@
       "label": "Section Background Style",
       "default": "color",
       "options": [
-        { 
-        "label": "Background Color", 
-        "value": "color" 
-        },
-        { 
-        "label": "Background Image", 
-        "value": "image" 
-        }
+        { "label": "Background Color", "value": "color" },
+        { "label": "Background Image", "value": "image" }
       ]
     },
     {
@@ -307,62 +265,39 @@
       "label": "Section Background Size",
       "default": "auto",
       "options": [
-        { "label": "Auto", 
-          "value": "auto" 
-        },
-        { "label": "Contain", 
-          "value": "contain" 
-        },
-        { 
-          "label": "Cover", 
-          "value": "cover" 
-          }
+        { "label": "Auto", "value": "auto" },
+        { "label": "Contain", "value": "contain" },
+        { "label": "Cover", "value": "cover" }
       ],
       "visible_if": "{{ section.settings.sectionbackground == 'image' }}"
     },
     { 
-    "type": "range", 
-    "id": "sectionpadding", 
-    "min": 0, 
-    "max": 500, 
-    "step": 10, 
-    "default": 50,
-    "unit" : "px", 
-    "label" : "Section Padding" 
+      "type": "text", 
+      "id": "sectionpadding", 
+      "default": "50|30|20",
+      "label" : "Section Padding (Desktop|Tablet|Mobile)",
+      "info": "Enter values in px, separated by | (example: 50|30|20)"
     },
     { 
-    "type": "range", 
-    "id": "gap", 
-    "min": 0, 
-    "max": 50, 
-    "step": 1, 
-    "default": 0,
-    "unit" : "px", 
-    "label" : "Row Gap" 
+      "type": "range", 
+      "id": "gap", 
+      "min": 0, 
+      "max": 50, 
+      "step": 1, 
+      "default": 0,
+      "unit" : "px", 
+      "label" : "Row Gap" 
     },
-
     { 
-    "type": "select", 
-    "id": "justify", 
-    "label": "Flex Justify",
-    "options":[
-      {
-        "label":"center",
-        "value":"center"
-      },
-      {
-        "label":"flex-start",
-        "value":"flex-start"
-      },
-      {
-        "label":"flex-end",
-        "value":"flex-end"
-      },
-       {
-        "label":"space-between",
-        "value":"space-between"
-      }
-    ] 
+      "type": "select", 
+      "id": "justify", 
+      "label": "Flex Justify",
+      "options":[
+        { "label":"center", "value":"center" },
+        { "label":"flex-start", "value":"flex-start" },
+        { "label":"flex-end", "value":"flex-end" },
+        { "label":"space-between", "value":"space-between" }
+      ] 
     },
     {
       "type": "color",
@@ -373,10 +308,8 @@
   ],
   "presets": [
     {
-      "name": "New Section3"
+      "name": "Column Section"
     }
   ]
 }
 {% endschema %}
-
-
