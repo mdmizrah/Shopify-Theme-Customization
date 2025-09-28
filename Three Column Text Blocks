@@ -61,14 +61,12 @@
 
 {%endstyle%}
 
-
 <section class= "{{section.id}}">
 
 {%if section.blocks.size > 0 %}
  <div class="flex">
   {% for block in section.blocks %}
-  <div class= "{{block.id}} {{block.settings.col}}">
-    {%liquid 
+     {%liquid 
     
      assign text = block.settings.text
      assign richtext = block.settings.richtext
@@ -76,14 +74,28 @@
      assign btntext = block.settings.btntext
      assign btnurl = block.settings.btnurl
      assign newtab = block.settings.newtab
+
+     assign column = block.settings.col
+     assign blockcolor = block.settings.blockcolor
+     assign paddingx = block.settings.paddingx
+     assign paddingy = block.settings.paddingy
+     assign radius = block.settings.radius
+     assign borderstyle = block.settings.borderstyle
+     assign bordercolor = block.settings.bordercolor
+     assign borderwidth = block.settings.borderwidth
+
     
     %}
 
-    <p> {{ text }} </p>
+  <div class= "{{block.id}} {{column}} color-{{ blockcolor }} gradient"
+   style="padding: {{ paddingy }}px {{ paddingx }}px; border-radius: {{ radius }}px; 
+    border: {{borderwidth }}px {{borderstyle }} {{bordercolor }}" > 
+
+    <h2> {{ text }} </h2>
     <div class="content">{{richtext}}</div>
 
     {%if btntext != blank%}
-    <a href = "{{btnurl}}" {%if newtab == true%} target =_blank {%endif%} >{{btntext}}</a>
+    <a class="button" href = "{{btnurl}}" {% if newtab == true %} target =_blank {%endif%} >{{btntext}}</a>
     {%endif%}
 
   </div>
@@ -135,6 +147,10 @@
         "visible_if": "{{ block.settings.btntext != blank }}"
       },
       {
+        "type": "header",
+        "content": "Block Style"
+      },
+        {
         "type": "select",
         "default": "col_50",
         "id":"col",
@@ -161,7 +177,84 @@
             "value": "col_20"
           }
         ]
-      }
+      },
+      {
+        "type": "color_scheme",
+        "id": "blockcolor",
+        "label": "Block Color"
+      },
+       {
+        "type": "range",
+        "id": "paddingx",
+        "default": 15,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Horizontal Padding"
+      },
+       {
+        "type": "range",
+        "id": "paddingy",
+        "default": 15,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical Padding"
+      },
+      {
+        "type": "range",
+        "id": "radius",
+        "default": 15,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Border Radius"
+      },
+
+        {
+       "type": "select",
+       "id": "borderstyle",
+       "label": "Border Style",
+       "default": "solid",
+       "options": [
+        {
+         "label":"none",
+         "value": ""
+        },
+        {
+         "label": "solid",
+         "value": "solid"
+        },
+         {
+         "label": "dotted",
+         "value": "dotted"
+        },
+         {
+         "label": "dased",
+         "value": "dased"
+        }
+       ]
+      },
+      {
+        "type": "range",
+        "id": "borderwidth",
+        "default": 15,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Border Width",
+        "visible_if": "{{block.settings.borderstyle != ''}}"
+      },
+      {
+        "type": "color",
+        "id": "bordercolor",
+        "label": "Border Color",
+        "visible_if": "{{block.settings.borderstyle != ''}}"
+      },
      ]
     }
   ],
@@ -265,3 +358,4 @@
   ]
 }
 {% endschema %}
+
