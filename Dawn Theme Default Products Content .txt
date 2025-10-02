@@ -1,0 +1,130 @@
+{% liquid
+  assign buynow = section.settings.buynow
+  assign btnurl = section.settings.btnurl
+  assign featured_product = all_products[section.settings.product]
+%}
+
+<section>
+  <div data-section="{{ section.id }}"
+       data-product-id="{{ featured_product.id }}"
+       data-update-url="false"
+       data-url="{{ featured_product.url }}">
+
+    {%- assign product_form_id = 'product-form-' | append: section.id -%}
+
+    <!-- Shopify default buy-buttons -->
+    {%- render 'buy-buttons',
+        product: featured_product,
+        product_form_id: product_form_id,
+        section_id: section.id
+    -%}
+
+    <!-- Shopify default price -->
+    {%- render 'price',
+        product: featured_product,
+        price_class: 'price--large'
+    -%}
+
+    <!-- Shopify default quantity -->
+    <div
+      id="Quantity-Form-{{ section.id }}"
+      class="product-form__input product-form__quantity"
+    >
+      <label
+        class="quantity__label form__label"
+        for="Quantity-{{ section.id }}"
+      >
+        {{ 'products.product.quantity.label' | t }}
+      </label>
+
+      <quantity-input class="quantity">
+        <button class="quantity__button" name="minus" type="button">
+          <span class="visually-hidden">
+            {{- 'products.product.quantity.decrease' | t: product: featured_product.title | escape -}}
+          </span>
+          <span class="svg-wrapper">
+            {{- 'icon-minus.svg' | inline_asset_content -}}
+          </span>
+        </button>
+
+        <!-- ✅ Default to 1 -->
+        <input
+          class="quantity__input"
+          type="number"
+          name="quantity"
+          id="Quantity-{{ section.id }}"
+          min="1"
+          step="{{ featured_product.selected_or_first_available_variant.quantity_rule.increment }}"
+          value="1"
+          form="{{ product_form_id }}"
+        >
+
+        <button class="quantity__button" name="plus" type="button">
+          <span class="visually-hidden">
+            {{- 'products.product.quantity.increase' | t: product: featured_product.title | escape -}}
+          </span>
+          <span class="svg-wrapper">
+            {{- 'icon-plus.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      </quantity-input>
+    </div>
+
+    <!-- Shopify Default Product Title -->
+    <h2 class="product__title {{ section.settings.heading_size }}">
+      {%- if featured_product != blank -%}
+        {{ featured_product.title | escape }}
+      {%- else -%}
+        {{ 'onboarding.product_title' | t }}
+      {%- endif -%}
+    </h2>
+
+    <!-- Optional custom Buy Now button -->
+    {% if buynow != blank and btnurl != blank %}
+      <a href="{{ btnurl }}" class="button">
+        {{ buynow }}
+      </a>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "New Featured Product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "buynow",
+      "label": "Buy Now"
+    },
+    {
+      "type": "url",
+      "id": "btnurl",
+      "label": "Buy Now Link"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Select Product"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Product Title Size",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "New Featured Product"
+    }
+  ]
+}
+{% endschema %}
