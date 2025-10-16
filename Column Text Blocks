@@ -25,13 +25,11 @@
     background-image: url("{{ bannerimg | img_url: '500x' }}");
     background-size: {{ sectionbgsize }};
   {% endif %}
-
   padding: {{ padding_desktop }}px;
 }
 
 .flex{
-    --space: {{gap}}px;
-    justify-content: {{justify}};
+    --space: {{ gap }}px;
     gap: var(--space);
     display: flex;
     flex-wrap: wrap;
@@ -57,7 +55,6 @@
  flex-basis: calc(20% - var(--space));
  max-width: calc(20% - var(--space));
 }
-
 
 
 @media (max-width: 1024px) {
@@ -96,8 +93,15 @@
        assign text = block.settings.text
        assign richtext = block.settings.richtext
        assign btntext = block.settings.btntext
-       assign btnurl = block.settings.btnurl
+       assign btnurl = block.settings.btnlink
        assign newtab = block.settings.newtab
+
+       assign media = block.settings.media
+       assign ratio = block.settings.ratio
+       assign mediastyle = block.settings.mediastyle
+       assign mediaradius = block.settings.mediaradius
+       
+
        assign column = block.settings.col
        assign blockcolor = block.settings.blockcolor
        assign paddingx = block.settings.paddingx
@@ -108,17 +112,32 @@
        assign borderwidth = block.settings.borderwidth
      %}
 
-  <div class="{{ block.id }} {{ column }} color-{{ blockcolor }} gradient"
-   style="padding: {{ paddingy }}px {{ paddingx }}px; border-radius: {{ radius }}px; 
-    border: {{ borderwidth }}px {{ borderstyle }} {{ bordercolor }}"> 
+     {% case block.type %}
+        {% when 'text_block' %}
+          <div class="{{ block.id }} {{ column }} color-{{ blockcolor }} gradient"
+            style="padding: {{ paddingy }}px {{ paddingx }}px; border-radius: {{ radius }}px; 
+              border: {{ borderwidth }}px {{ borderstyle }} {{ bordercolor }}"> 
 
-    <h2>{{ text }}</h2>
-    <div class="content">{{ richtext }}</div>
+              <h2>{{ text }}</h2>
+              <div class="content">{{ richtext }}</div>
 
-    {% if btntext != blank %}
-      <a class="button" href="{{ btnurl }}" {% if newtab == true %} target="_blank" {% endif %}>{{ btntext }}</a>
-    {% endif %}
-  </div>
+              {% if btntext != blank %}
+                <a class="button" href="{{ btnurl }}" {% if newtab == true %} target="_blank" {% endif %}>{{ btntext }}</a>
+              {% endif %}
+            </div>
+        {% when 'media' %}
+          <div class="{{ block.id }} {{ column }} color-{{ blockcolor }} gradient"
+            style="padding: {{ paddingy }}px {{ paddingx }}px; border-radius: {{ radius }}px; 
+              border: {{ borderwidth }}px {{ borderstyle }} {{ bordercolor }}">
+
+            {%if btnurl != blank  %} <a href="{{ btnurl }}"> {%endif %}
+            <img src="{{ media | img_url:'500x' }}" alt="{{ media.alt }}" height="Auto" width="100%" loading="eager" fetchpriority ="heigh"
+            style="object-fit:{{ mediastyle }};aspect-ratio: {{ ratio }}; border-radius: {{ mediaradius }}px ">
+            {%if btnurl != blank  %} </a> {%endif %}
+            </div>
+     {% endcase %}
+
+  
   {% endfor %}
  </div>
 {% endif %}
@@ -126,8 +145,140 @@
 
 {% schema %}
 {
-  "name": "Column Section",
+  "name": "Column Section3",
   "blocks": [
+    {
+     "type": "media",
+     "name": "Media",
+     "settings":[
+      {
+        "type":"image_picker",
+        "id":"media",
+        "label": "Image",
+      },
+      {
+       "type":"url",
+       "id":"btnurl",
+       "label": "Button url",
+       "visible_if": "{{block.settings.media != blank }}"
+      },
+      {
+       "type": "select",
+       "id": "ratio",
+       "label": "Media Size",
+       "default":"",
+       "options": [
+        {"label": "Auto","value":""},
+        {"label": "square","value":"1/1"},
+        {"label": "portrait","value":"1/1.5"},
+        {"label": "Horizontal","value":"1.5/1"}
+       ]
+      },
+       {
+       "type": "select",
+       "id": "mediastyle",
+       "label": "Media Style",
+       "default":"",
+       "options": [
+        {"label": "Auto","value":""},
+        {"label": "Cover","value":"cover"},
+        {"label": "Contain","value":"contain"},
+       ]
+      },
+        {
+        "type": "range",
+        "id": "mediaradius",
+        "default": 15,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Media Border Radius"
+      },
+      {
+        "type": "header",
+        "content": "Block Style"
+      },
+      {
+        "type": "select",
+        "default": "col_50",
+        "id":"col",
+        "label": "Block Width",
+        "options": [
+          { "label": "100%", "value": "col_100" },
+          { "label": "75%", "value": "col_75" },
+          { "label": "50%", "value": "col_50" },
+          { "label": "25%", "value": "col_25" },
+          { "label": "20%", "value": "col_20" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "blockcolor",
+        "label": "Block Color"
+      },
+      {
+        "type": "range",
+        "id": "paddingx",
+        "default": 15,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Horizontal Padding"
+      },
+      {
+        "type": "range",
+        "id": "paddingy",
+        "default": 15,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical Padding"
+      },
+      {
+        "type": "range",
+        "id": "radius",
+        "default": 15,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Border Radius"
+      },
+      {
+       "type": "select",
+       "id": "borderstyle",
+       "label": "Border Style",
+       "default": "solid",
+       "options": [
+        { "label":"none", "value": "" },
+        { "label": "solid", "value": "solid" },
+        { "label": "dotted", "value": "dotted" },
+        { "label": "dashed", "value": "dashed" }
+       ]
+      },
+      {
+        "type": "range",
+        "id": "borderwidth",
+        "default": 1,
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "label": "Border Width",
+        "visible_if": "{{block.settings.borderstyle != blank }}"
+      },
+      {
+        "type": "color",
+        "id": "bordercolor",
+        "label": "Border Color",
+        "visible_if": "{{block.settings.borderstyle != blank}}"
+      }
+     ]
+    },
+  
     {
      "type": "text_block",
      "name": "Text Blocks",
@@ -237,13 +388,13 @@
         "step": 1,
         "unit": "px",
         "label": "Border Width",
-        "visible_if": "{{block.settings.borderstyle != ''}}"
+        "visible_if": "{{block.settings.borderstyle != blank }}"
       },
       {
         "type": "color",
         "id": "bordercolor",
         "label": "Border Color",
-        "visible_if": "{{block.settings.borderstyle != ''}}"
+        "visible_if": "{{block.settings.borderstyle != blank}}"
       }
      ]
     }
