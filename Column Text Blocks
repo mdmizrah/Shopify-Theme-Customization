@@ -9,6 +9,7 @@
 
     assign gap = section.settings.gap
     assign justify = section.settings.justify
+    assign layout = section.settings.layout
 
     # Split padding values: "desktop|tablet|mobile"
     assign padding_values = section.settings.sectionpadding | split: "|"
@@ -87,7 +88,7 @@
 
 <section class="{{ section.id }}">
 {% if section.blocks.size > 0 %}
- <div class="flex">
+ <div class="flex {{layout}}">
   {% for block in section.blocks %}
      {% liquid 
        assign text = block.settings.text
@@ -432,8 +433,18 @@
       "type": "text", 
       "id": "sectionpadding", 
       "default": "50|30|20",
-      "label" : "Section Padding (Desktop|Tablet|Mobile)",
+      "label": "Section Padding (Desktop|Tablet|Mobile)",
       "info": "Enter values in px, separated by | (example: 50|30|20)"
+    },
+     {
+      "type": "select",
+      "label": "Select Layout",
+      "default": "page-width",
+      "id": "layout",
+      "options": [
+        { "value": "fullwidth", "label": "Full Width" },
+        { "value": "page-width", "label": "Page Width" }
+      ]
     },
     { 
       "type": "range", 
@@ -470,4 +481,5 @@
   ]
 }
 {% endschema %}
+
 
