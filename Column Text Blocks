@@ -70,6 +70,7 @@
   }
   .col_75,
   .col_50,
+  .col_33,
   .col_25,
   .col_20 {
     flex-basis: calc(50% - var(--space));
@@ -83,6 +84,7 @@
   }
   .col_75,
   .col_50,
+  .col_33,
   .col_25,
   .col_20 {
     flex-basis: calc(100% - var(--space));
@@ -489,3 +491,4 @@
   ]
 }
 {% endschema %}
+
