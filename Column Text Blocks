@@ -26,15 +26,17 @@
     background-image: url("{{ bannerimg | img_url: '500x' }}");
     background-size: {{ sectionbgsize }};
   {% endif %}
+
   padding: {{ padding_desktop }}px;
 }
 
-.flex{
-    --space: {{ gap }}px;
-    gap: var(--space);
-    display: flex;
-    flex-wrap: wrap;
-   }
+ .flex{
+   --space: {{ gap }}px;
+   justify-content: {{ justify }};
+   gap: var(--space);
+   display: flex;
+   flex-wrap: wrap;
+     }
 
 .col_100 {
  flex-basis: calc(100% - var(--space));
@@ -47,6 +49,10 @@
 .col_50 {
  flex-basis: calc(50% - var(--space));
  max-width: calc(50% - var(--space));
+}
+.col_33{
+ flex-basis: calc(33.33% - var(--space));
+ max-width: calc(33.33% - var(--space)); 
 }
 .col_25 {
  flex-basis: calc(25% - var(--space));
@@ -209,6 +215,7 @@
           { "label": "100%", "value": "col_100" },
           { "label": "75%", "value": "col_75" },
           { "label": "50%", "value": "col_50" },
+          { "label": "33%", "value": "col_33" },
           { "label": "25%", "value": "col_25" },
           { "label": "20%", "value": "col_20" }
         ]
@@ -329,6 +336,7 @@
           { "label": "100%", "value": "col_100" },
           { "label": "75%", "value": "col_75" },
           { "label": "50%", "value": "col_50" },
+          { "label": "33%", "value": "col_33" },
           { "label": "25%", "value": "col_25" },
           { "label": "20%", "value": "col_20" }
         ]
@@ -433,10 +441,10 @@
       "type": "text", 
       "id": "sectionpadding", 
       "default": "50|30|20",
-      "label": "Section Padding (Desktop|Tablet|Mobile)",
+      "label" : "Section Padding (Desktop|Tablet|Mobile)",
       "info": "Enter values in px, separated by | (example: 50|30|20)"
     },
-     {
+    {
       "type": "select",
       "label": "Select Layout",
       "default": "page-width",
@@ -481,5 +489,3 @@
   ]
 }
 {% endschema %}
-
-
