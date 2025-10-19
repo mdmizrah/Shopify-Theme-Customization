@@ -1,0 +1,87 @@
+{% liquid
+  assign displaybutton = section.settings.displaybutton
+  assign buttontext = section.settings.buttontext
+  assign buttonurl = section.settings.buttonurl
+
+  if displaybutton == 'desktop'
+    assign showbutton = 'only_desktop'
+  elsif displaybutton == 'phone'
+    assign showbutton = 'only_phone'
+  else
+    assign showbutton = 'both'
+  endif
+ %}
+ 
+{% style %}
+  .only_desktop {
+    display: block !important;
+  }
+
+  .only_phone {
+    display: none !important;
+  }
+
+  @media (max-width: 575px) {
+    .only_desktop {
+      display: none !important;
+    }
+    .only_phone {
+      display: block !important;
+    }
+  }
+{% endstyle %}
+
+{% if showbutton == 'only_desktop' %}
+  <a class="button only_desktop" href="{{ buttonurl }}">{{ buttontext }}</a>
+{% elsif showbutton == 'only_phone' %}
+  <a class="button only_phone" href="{{ buttonurl }}">{{ buttontext }}</a>
+{% else %}
+  <a class="button" href="{{ buttonurl }}">{{ buttontext }}</a>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Custom Button Section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Custom Button"
+    },
+    {
+      "type": "text",
+      "label": "Button Text",
+      "id": "buttontext"
+    },
+    {
+      "type": "url",
+      "label": "Button URL",
+      "id": "buttonurl"
+    },
+    {
+      "type": "select",
+      "label": "Display Button",
+      "id": "displaybutton",
+      "default": "both",
+      "options": [
+        {
+          "label": "Show in desktop",
+          "value": "desktop"
+        },
+        {
+          "label": "Show in phone",
+          "value": "phone"
+        },
+        {
+          "label": "Show in both",
+          "value": "both"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Button Section"
+    }
+  ]
+}
+{% endschema %}
