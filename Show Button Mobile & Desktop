@@ -14,7 +14,7 @@
  
 {% style %}
   .only_desktop {
-    display: block !important;
+    display: inline-grid !important;
   }
 
   .only_phone {
@@ -26,7 +26,7 @@
       display: none !important;
     }
     .only_phone {
-      display: block !important;
+      display: inline-grid !important;
     }
   }
 {% endstyle %}
@@ -85,4 +85,3 @@
   ]
 }
 {% endschema %}
-
