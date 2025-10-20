@@ -1,0 +1,58 @@
+{% liquid
+  assign imagedesktop = section.settings.imagedesktop
+  assign imagephone = section.settings.imagephone
+%}
+
+{% style %}
+  .imagedesktop {
+    display: block !important;
+  }
+
+  .imagephone {
+    display: none !important;
+  }
+
+  @media (max-width: 575px) {
+    .imagedesktop {
+      display: none !important;
+    }
+    .imagephone {
+      display: block !important;
+    }
+  }
+{% endstyle %}
+
+{% if imagedesktop !=blank %}
+  <img class="imagedesktop" src="{{ imagedesktop | image_url: width: 300, height: 300 }}" alt="{{ imagedesktop.alt | escape }}">
+{% endif %}
+
+{% if imagephone !=blank %} 
+  <img class="imagephone"src="{{ imagephone | image_url: width: 300, height: 300 }}" alt="{{ imagephone.alt | escape }}">
+{% endif %}
+
+{% schema %}
+{
+  "name": "Custom Button Section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Show Two Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagedesktop",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagephone",
+      "label": "Mobile Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Two Image"
+    }
+  ]
+}
+{% endschema %}
