@@ -1,0 +1,177 @@
+{% liquid
+  assign section_title = section.settings.title
+  assign paddingtop = section.settings.paddingtop
+  assign paddingbottom = section.settings.paddingbottom
+  assign show_title_border = section.settings.show_title_border
+%}
+
+{% style %}
+  /* Section padding */
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ paddingtop }}px;
+    padding-bottom: {{ paddingbottom }}px;
+  }
+
+  /* Grid layout for blocks using CSS Grid */
+  .{{ section.id }} .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on desktop */
+    gap: 20px;
+    justify-items: center; /* center each item horizontally */
+  }
+
+  .{{ section.id }} .grid-item {
+    text-align: center;
+    width: 100%; /* full width of grid cell */
+    max-width: 300px; /* optional max width */
+  }
+
+  .{{ section.id }} .grid-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  /* Section title */
+  .{{ section.id }} .section-title {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  /* Conditional border under title */
+  .{{ section.id }} .section-title.with-border span {
+    display: inline-block;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+  }
+
+  /* Grid item title and description */
+  .{{ section.id }} .grid-item h2 {
+    font-size: 18px;
+    margin: 5px 0 10px;
+  }
+
+  .{{ section.id }} .grid-item p {
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+  }
+
+  /* Tablet: 2 columns */
+  @media (max-width: 1024px) {
+    .{{ section.id }} .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Mobile: 1 column */
+  @media (max-width: 768px) {
+    .{{ section.id }} .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstyle %}
+
+<section id="shopify-section-{{ section.id }}" class="{{ section.id }}">
+  <div class="page-width">
+    <h1 class="section-title {% if show_title_border %}with-border{% endif %}">
+      <span>{{ section_title }}</span>
+    </h1>
+  </div>
+
+  <div class="page-width">
+    <div class="grid">
+      {% for block in section.blocks %}
+        {% liquid
+          assign image = block.settings.image
+          assign block_title = block.settings.title
+          assign desc = block.settings.desc
+        %}
+        <div class="grid-item">
+          {% if image %}
+            <img src="{{ image | image_url: width: 300, height: 300 }}" alt="{{ image.alt | default: block_title }}">
+          {% endif %}
+          {% if block_title %}
+            <h2>{{ block_title }}</h2>
+          {% endif %}
+          {% if desc %}
+            <p>{{ desc }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Three Image Column",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Lorem Ipsum Dollar Sit"
+    },
+    {
+      "type": "range",
+      "id": "paddingtop",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "paddingbottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title_border",
+      "label": "Show border under title",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "block",
+      "name": "Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Add Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Lorem Ipsum Dollar Sit"
+        },
+        {
+          "type": "text",
+          "id": "desc",
+          "label": "Description",
+          "default": "Lorem Ipsum Dollar Sit"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Custom Three Image Column",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}
